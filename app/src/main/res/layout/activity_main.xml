@@ -8,9 +8,27 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff22686f">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="170dp"
+            android:text="Button"/>
+
+    </RelativeLayout>
+
 
     <com.chiemy.demo.xfermodedemo.XfermodeView
         android:id="@+id/xfermodeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
 </RelativeLayout>

@@ -1,13 +1,7 @@
 package com.chiemy.demo.xfermodedemo;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -21,6 +15,9 @@ public class XfermodeView extends View {
     private int paddingTop;
     private Paint xfermodePaint;
     private Paint paint;
+    private Paint xFerModePaintClear;
+
+    public static final int DEFAULT_BACKGROUND_COLOR = 0x82526622;
 
     public XfermodeView(Context context) {
         super(context, null);
@@ -36,6 +33,23 @@ public class XfermodeView extends View {
         paint.setTextSize(50);
 
         setXfermode(MODE);
+        init();
+    }
+
+    private void init() {
+        xFerModePaintClear = new Paint();
+        xFerModePaintClear.setAntiAlias(true);
+        PorterDuffXfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+        xFerModePaintClear.setXfermode(xfermode);
+
+        //设置画笔遮罩滤镜,可以传入BlurMaskFilter或EmbossMaskFilter，前者为模糊遮罩滤镜而后者为浮雕遮罩滤镜
+        //这个方法已经被标注为过时的方法了，如果你的应用启用了硬件加速，你是看不到任何阴影效果的
+        xFerModePaintClear.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.INNER));
+        //关闭当前view的硬件加速
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
+
+        //ViewGroup默认设定为true，会使onDraw方法不执行，如果复写了onDraw(Canvas)方法，需要清除此标记
+        setWillNotDraw(false);
     }
 
     @Override
@@ -84,17 +98,23 @@ public class XfermodeView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.save();
-        canvas.translate(-offset/2, 0);
-
-        canvas.drawBitmap(srcBitmap, 0, -offset, null);
-        canvas.drawText("src", offset, offset, paint);
-
-        canvas.drawBitmap(dstBitmap, 4 * offset, 0, null);
-        canvas.drawText("dst", 4 * offset, offset, paint);
-
+        canvas.drawColor(DEFAULT_BACKGROUND_COLOR);
+        RectF rectF = new RectF(20, 20, 100, 100);
+        canvas.drawRect(rectF, xFerModePaintClear);
         canvas.restore();
 
-        canvas.drawBitmap(xfermodeBitmap, 0, bitmapSize, null);
+//        canvas.save();
+//        canvas.translate(-offset/2, 0);
+//
+//        canvas.drawBitmap(srcBitmap, 0, -offset, null);
+//        canvas.drawText("src", offset, offset, paint);
+//
+//        canvas.drawBitmap(dstBitmap, 4 * offset, 0, null);
+//        canvas.drawText("dst", 4 * offset, offset, paint);
+//
+//        canvas.restore();
+//
+//        canvas.drawBitmap(xfermodeBitmap, 0, bitmapSize, null);
     }
 
 
